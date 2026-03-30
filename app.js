@@ -13,6 +13,7 @@ const EVENT_CONFIGS = {
 const state = {
     events: {},
     allRunnersByPk: new Map(),
+    allRunnersByBib: new Map(),
     visibleEventKeys: ["hm", "7k"],
     activeEventKey: "hm",
     selectedRunnerPk: null,
@@ -50,6 +51,7 @@ async function init() {
     }
 
     prepareData();
+    applyHashSelection();
     syncReplayControls();
     renderEventToggle();
     renderActiveRunner();
@@ -60,6 +62,7 @@ async function init() {
     drawMapOverlay();
 
     window.addEventListener("resize", handleResize);
+    window.addEventListener("hashchange", applyHashSelection);
 
     const mapFrame = dom.raceMap.closest(".map-frame");
     const autoplayObserver = new IntersectionObserver(
@@ -240,6 +243,7 @@ async function loadData() {
 
 function prepareData() {
     state.allRunnersByPk = new Map();
+    state.allRunnersByBib = new Map();
 
     for (const [eventKey, evt] of Object.entries(state.events)) {
         evt.runners = evt.data.runners.map((runner) => {
@@ -271,6 +275,7 @@ function prepareData() {
                 (evt.divisionCounts.get(runner.division) || 0) + 1
             );
             state.allRunnersByPk.set(String(runner.pk), runner);
+            state.allRunnersByBib.set(String(runner.bib), runner);
         }
 
         buildCourseGeometry(evt);
@@ -387,11 +392,13 @@ function setFocusedRunner(pk) {
         if (runner) {
             dom.runnerSearchInput.value = runner.name;
             state.activeEventKey = runner.eventKey;
+            history.replaceState(null, "", `#${runner.bib}`);
         } else {
             dom.runnerSearchInput.value = "";
         }
     } else {
         dom.runnerSearchInput.value = "";
+        history.replaceState(null, "", window.location.pathname + window.location.search);
         if (!state.visibleEventKeys.includes(state.activeEventKey)) {
             state.activeEventKey = state.visibleEventKeys[0];
         }
@@ -407,6 +414,13 @@ function setFocusedRunner(pk) {
     renderChartControls();
     renderChart();
     drawMapOverlay();
+}
+
+function applyHashSelection() {
+    const bib = window.location.hash.replace(/^#/, "");
+    if (!bib) return;
+    const runner = state.allRunnersByBib.get(bib);
+    if (runner) setFocusedRunner(runner.pk);
 }
 
 function addCompareRunner(pk) {

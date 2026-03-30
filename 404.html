@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script>
+        // Redirect /loverun2026/10076 → /loverun2026/#10076
+        // GitHub Pages serves this 404.html for any unknown path.
+        var path = window.location.pathname.replace(/\/$/, "");
+        var bib = path.substring(path.lastIndexOf("/") + 1);
+        if (/^\d+$/.test(bib)) {
+            window.location.replace(path.substring(0, path.lastIndexOf("/") + 1) + "#" + bib);
+        }
+    </script>
+</head>
+<body></body>
+</html>

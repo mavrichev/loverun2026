@@ -339,12 +339,12 @@ button, input, select { font: inherit; }
     font-size: 12px;
 }
 
-.metric-chip strong { font-weight: 700; }
+.metric-chip strong { font-weight: 700; font-variant-numeric: tabular-nums; }
 
 .map-frame {
     position: relative;
-    width: 90%;
-    aspect-ratio: 1 / 0.6;
+    width: 98%;
+    aspect-ratio: 1 / 0.8;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: #f0f0f0;
@@ -377,6 +377,22 @@ button, input, select { font: inherit; }
 }
 
 .map-fallback.visible { display: flex; }
+
+.map-countdown {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(120px, 20vw, 240px);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    z-index: 2;
+    pointer-events: none;
+    text-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+}
+
+.map-countdown.active { display: flex; }
 
 /* === Replay Controls === */
 .replay-controls {

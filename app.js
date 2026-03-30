@@ -27,6 +27,7 @@ const state = {
     mapReady: false,
     chartHitLines: [],
     hoveredChartRunnerPk: null,
+    autoplayFired: false,
 };
 
 const dom = {};
@@ -59,6 +60,18 @@ async function init() {
     drawMapOverlay();
 
     window.addEventListener("resize", handleResize);
+
+    const mapFrame = dom.raceMap.closest(".map-frame");
+    const autoplayObserver = new IntersectionObserver(
+        ([entry]) => {
+            if (entry.isIntersecting && !state.autoplayFired) {
+                autoplayObserver.disconnect();
+                startAutoplayCountdown();
+            }
+        },
+        { threshold: 0.5 }
+    );
+    autoplayObserver.observe(mapFrame);
 }
 
 function cacheDom() {
@@ -79,6 +92,7 @@ function cacheDom() {
     dom.raceMap = document.getElementById("raceMap");
     dom.mapOverlay = document.getElementById("mapOverlay");
     dom.mapFallback = document.getElementById("mapFallback");
+    dom.mapCountdown = document.getElementById("mapCountdown");
     dom.playToggle = document.getElementById("playToggle");
     dom.replaySlider = document.getElementById("replaySlider");
     dom.replayClock = document.getElementById("replayClock");
@@ -123,14 +137,19 @@ function bindStaticEvents() {
         setFocusedRunner(null);
     });
 
-    dom.playToggle.addEventListener("click", toggleReplay);
+    dom.playToggle.addEventListener("click", () => {
+        state.autoplayFired = true;
+        toggleReplay();
+    });
     dom.replaySlider.addEventListener("input", () => {
+        state.autoplayFired = true;
         pauseReplay();
         state.currentReplaySeconds = Number(dom.replaySlider.value);
         updateReplayUi();
         drawMapOverlay();
     });
     dom.replaySpeed.addEventListener("change", () => {
+        state.autoplayFired = true;
         state.replaySpeed = Number(dom.replaySpeed.value);
     });
 
@@ -1036,6 +1055,27 @@ function toggleReplay() {
     state.lastAnimationFrameAt = 0;
     dom.playToggle.innerHTML = "&#9646;&#9646;";
     state.animationFrame = requestAnimationFrame(stepReplay);
+}
+
+function startAutoplayCountdown() {
+    if (state.autoplayFired) return;
+    state.autoplayFired = true;
+
+    const el = dom.mapCountdown;
+    let count = 3;
+    el.textContent = count;
+    el.classList.add("active");
+
+    const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            el.textContent = count;
+        } else {
+            clearInterval(interval);
+            el.classList.remove("active");
+            toggleReplay();
+        }
+    }, 700);
 }
 
 function pauseReplay() {

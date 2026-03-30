@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saucony Love Run Philly 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <main class="page-shell">
+        <header class="hero">
+            <h1>Saucony Love Run Philly 2026</h1>
+            <p class="disclaimer">
+                This project uses public Philly Love Run race timing data, created for fun only, these are <em>NOT OFFICIAL RACE RESULTS</em>.
+                If you want to verify and look up official results go to <a href="https://results.laurelt.com/luv/results" target="_blank" rel="noopener">results.laurelt.com/luv/results</a>.
+                I have no affiliation with Saucony Love Run Philly, I was simply a participant in the race, and having thoroughly enjoyed the experience I made this site to look back and share the experience.
+            </p>
+        </header>
+
+        <!-- Runner Search -->
+        <section class="panel panel-light">
+            <div class="panel-inner">
+                <h2 class="section-title">Runner Search</h2>
+                <div class="search-stack" data-search-root="runner">
+                    <div class="search-field">
+                        <input id="runnerSearchInput" type="text" placeholder="Search by name, bib, or division">
+                        <button id="clearRunnerSelection" type="button" hidden>Clear</button>
+                    </div>
+                    <div class="search-results" id="runnerSearchResults"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="panel panel-light">
+            <div class="panel-inner">
+                <div class="stats-header">
+                    <h2 class="section-title" id="eventStatsTitle">Overall Results</h2>
+                    <div class="event-toggle" id="eventToggle">
+                        <button class="event-toggle-btn active" data-events="hm,7k">Both</button>
+                        <button class="event-toggle-btn" data-events="hm">Half Marathon</button>
+                        <button class="event-toggle-btn" data-events="7k">7K</button>
+                    </div>
+                </div>
+                <div class="stats-grid" id="eventStatsGrid"></div>
+
+                <div id="runnerStatsBlock" hidden>
+                    <h2 class="section-title" id="runnerStatsTitle"></h2>
+                    <div class="stats-grid" id="runnerStatsGrid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Replay Map -->
+        <section class="panel panel-dark">
+            <div class="panel-inner">
+                <div class="section-head">
+                    <div>
+                        <h2>Replay the race</h2>
+                        <p>This is a simulation based on published race checkpoint times using extrapolated data.</p>
+                    </div>
+                    <div class="map-meta">
+                        <div class="metric-chip" id="mapClock"><strong>0:00</strong></div>
+                        <div class="metric-chip" id="mapStarted"><strong>0</strong> started</div>
+                        <div class="metric-chip" id="mapActive"><strong>0</strong> moving</div>
+                        <div class="metric-chip" id="mapFinished"><strong>0</strong> finished</div>
+                    </div>
+                </div>
+
+                <div class="map-frame">
+                    <div id="raceMap"></div>
+                    <canvas id="mapOverlay"></canvas>
+                    <div class="map-fallback" id="mapFallback"></div>
+                </div>
+
+                <div class="replay-controls">
+                    <button class="play-icon-btn" id="playToggle" type="button" aria-label="Play">&#9654;</button>
+                    <div class="slider-compact">
+                        <input id="replaySlider" type="range" min="0" max="0" value="0" step="1">
+                        <div class="slider-labels">
+                            <span id="replayClock">0:00</span>
+                            <span id="maxClock">0:00</span>
+                        </div>
+                    </div>
+                    <select id="replaySpeed" class="speed-select" aria-label="Playback speed">
+                        <option value="15">15x</option>
+                        <option value="45" selected>45x</option>
+                        <option value="90">90x</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Position Chart -->
+        <section class="panel panel-dark">
+            <div class="panel-inner">
+                <h2 class="section-title">Placement Through The Race</h2>
+
+                <div class="chart-toolbar">
+                    <div class="chart-note" id="chartModeNote"></div>
+                    <div class="compare-box" data-search-root="compare">
+                        <label class="compare-label" for="compareSearchInput">Add comparison runner</label>
+                        <div class="search-field">
+                            <input id="compareSearchInput" type="text" placeholder="Select a focused runner first" disabled>
+                        </div>
+                        <div class="search-results" id="compareSearchResults"></div>
+                        <div class="compare-disabled" id="compareDisabled">Select a focused runner to enable comparison search.</div>
+                    </div>
+                </div>
+
+                <div class="chip-row" id="compareChips"></div>
+
+                <div class="chart-wrap">
+                    <canvas id="positionChart"></canvas>
+                    <div class="chart-tooltip" id="chartTooltip"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="./app.js"></script>
+</body>
+</html>

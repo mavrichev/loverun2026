@@ -201,6 +201,13 @@ function bindStaticEvents() {
         if (!btn) return;
         setVisibleEvents(btn.dataset.events.split(","));
     });
+
+    document.getElementById("seeMyResult").addEventListener("click", (e) => {
+        e.preventDefault();
+        setFocusedRunner(8748416);
+        renderAll();
+        document.querySelector(".search-field").scrollIntoView({ behavior: "smooth" });
+    });
 }
 
 async function loadData() {

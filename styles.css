@@ -572,6 +572,23 @@ button, input, select { font: inherit; }
     color: var(--ink) !important;
 }
 
+/* === Footer === */
+.site-footer {
+    text-align: center;
+    padding: 24px 0 32px;
+    font-size: 13px;
+    color: var(--text-soft-light);
+}
+
+.site-footer a {
+    color: var(--text-soft-light);
+    text-decoration: none;
+}
+
+.site-footer a:hover { text-decoration: underline; }
+
+.footer-sep { margin: 0 8px; }
+
 /* === Responsive === */
 @media (max-width: 980px) {
     .chart-toolbar,
